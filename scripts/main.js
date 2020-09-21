@@ -1,20 +1,30 @@
 (function () {
+    var runTypographButton = document.querySelector('.runTypographButton');
+    var textareaInput = document.getElementById('textareaInput');
 
     function changeButtonCondition() {
-        var runTypographButton = document.querySelector('.runTypographButton');
-        if (textareaInputCondition > 0) {
+        
+        if (textareaInput.value.length != '') {
             runTypographButton.classList.remove('disabled');
+            runTypographButton.addEventListener('click', runTypograph);
         } else {
             runTypographButton.classList.add('disabled');
+            runTypographButton.removeEventListener('click', runTypograph);
         }
     }
 
-    function textareaInputCondition() {
-        var textareaInput = document.getElementById('textareaInput');
-        var textareaInputValue = textareaInput.value;
-        return textareaInputValue.length;
+    function textareaInputEventListener() {
+        textareaInput.addEventListener('input', function() {
+            changeButtonCondition();
+          });
     }
+
+    function runTypograph() {
+        console.log("runTypograph");
+    }
+
     changeButtonCondition();
-    
-  
+    textareaInputEventListener();
+
+
   })();
