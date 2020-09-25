@@ -34,19 +34,32 @@
     <div class="container">
         <div class="workPlace">
             <section class="workPlace__input">
-                <textarea autofocus id="textareaInput" class="workPlace__textarea"></textarea>
+                <div class="topPanel">
+                    <span></span>
+                    <span class="topPanel__iconBody clearInput" title="Очистить"><img src="img/icon_clear.svg" class="topPanel__icon"></span>
+                </div>
+                <textarea autofocus id="textInput" class="workPlace__textarea" placeholder="Текст для исправления"></textarea>
                 <button class="button runTypographButton">Исправить</button>
             </section>
-            <section class="workPlace__output">
-                <textarea readonly id="textareaOutput" class="workPlace__textarea"></textarea>
+            <section class="workPlace__output" style="display: none;">
+                <!-- <textarea readonly id="textareaOutput" class="workPlace__textarea"></textarea> -->
+                <div class="topPanel">
+                    <span class="topPanel__iconBody arrowBack" title="Назад"><img src="img/icon_arrow-left.svg" class="topPanel__icon"></span>
+                    <span class="topPanel__iconBody clearOutput" title="Очистить и вернуться"><img src="img/icon_clear.svg" class="topPanel__icon"></span>
+                </div>
+                <div id="textOutput" class="workPlace__textarea textOutput"></div>
+                <textarea class="hiddenOutput"></textarea>
+                <pre id="workResult" class="workResult__textarea"></pre>
+                <button class="button copyTextButton">Скопировать текст</button>
             </section>
         </div>
+
     </div>
     
-    <div class="container about">
+    <div class="container">
+        <details>
+            <summary>Возможности</summary>
         <section>
-            <h2>Возможности</h2>
-
             <p>Плагин форматирует текст в&nbsp;макетах Sketch для&nbsp;приведения его&nbsp;к&nbsp;правильному виду с&nbsp;точки зрения типографики и&nbsp;редполитики Сбербанк&nbsp;Онлайн.</p>
             <p>Помогает автоматически расставить неразрывные пробелы, убрать висячие предлоги и&nbsp;союзы, исправить "простые кавычки" на&nbsp;«ёлочки» и&nbsp;„лапки“. Правильно расставит дефис, длинное и&nbsp;среднее тире, уберёт точку в&nbsp;заголовке,
                 приведёт телефонные номера к&nbsp;правильному виду. Исправит слова «вы», «банк», «приложение», «условия», «сайт» на&nbsp;нижний регистр, разобьёт длинные числа по&nbsp;разрядам и&nbsp;заменит букву «е» на&nbsp;«ё» в&nbsp;словах, где она
@@ -54,9 +67,7 @@
         </section>
 
         <section>
-            <h2>Правила</h2>
-            <p>Правила, используемые в&nbsp;плагине.
-            </p>
+            <h4>Правила, используемые в&nbsp;плагине</h4>
             <div class="pluginRules">
                 <div class="pluginRules__item">
                     <div class="pluginRules__title">Ёфикатор</div>
@@ -183,12 +194,19 @@
         </section>
 
         <section>
-            <h2>Книга жалоб и&nbsp;предложений</h2>
+            <h4>Книга жалоб и&nbsp;предложений</h4>
             <p>Telegram: <a href="https://t.me/m_danilov" target="_blank">Mikhail Danilov</a>, email: <a href="mailto:m.danilov@gmail.com">m.danilov@gmail.com</a>
             </p>
         </section>
+    </details>
     </div>
-    <script src="scripts/main.js"></script>
+    
+    <script src="data/monthWeekday.js"></script>
+    <script src="data/noBreakSpace.js"></script>
+    <script src="data/phoneCodeRu.js"></script>
+    <script src="data/yo.js"></script>
+    <script src="scripts/sboltypograph.js"></script>
+    
 </body>
 
 </html>

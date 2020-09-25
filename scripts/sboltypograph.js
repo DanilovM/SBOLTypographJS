@@ -1,24 +1,5 @@
-const sketch = require('sketch')
-
-var onRun = function (context) {
-
-    var workResult = ""
-
-    var _nbsp = '\u00A0'
-    var _counterPunctuation = 0
-    var _counterReplaceQuoteMarks = 0
-    var _counterDeleteSpaces = 0
-    var _counterRemoveEndDotInSingleString = 0
-    var _counterAddNoBreakSpace = 0
-    var _counterYO = 0
-    var _counterDash = 0
-    var _counterPhoneNumber = 0
-    var _counterReplaceDotWithComma = 0
-    var _counterRub = 0
-    var _counterCurrency = 0
-    var _counterLowerCase = 0
-    var _counterOther = 0
-
+(function () {
+ 
     var _dataBeforeNBSP
     var _dataAfterNBSP
     var _yoDict = []
@@ -28,127 +9,217 @@ var onRun = function (context) {
     var _dataWeekday
     var _dataWeekdayShort
 
-    function readFile(fileName) {
-        // Читаем файл из дирр. Resources
-        const baseURL = context.scriptURL
-        const pathToResources = baseURL
-            .URLByDeletingLastPathComponent()
-            .URLByAppendingPathComponent("../Resources/" + fileName)
+    var workPlaceInput = document.querySelector('.workPlace__input');
+    var workPlaceOutput = document.querySelector('.workPlace__output');
+    var hiddenOutput = document.querySelector('.hiddenOutput');
+    var clearInput = document.querySelector('.clearInput');
+    var clearOutput = document.querySelector('.clearOutput');
+    var arrowBack = document.querySelector('.arrowBack');
+    var runTypographButton = document.querySelector('.runTypographButton');
+    var copyTextButton = document.querySelector('.copyTextButton');
+    var textInput = document.getElementById('textInput');
+    var textOutput = document.getElementById('textOutput');
+    var workResult = document.getElementById('workResult');
 
-        var fileContent = NSString.stringWithContentsOfFile(pathToResources)
-        return fileContent
+    clearOutput.addEventListener('click', clearOutputText);
+    
+    function backLink() {
+        arrowBack.addEventListener('click', function() {
+            workPlaceInput.style.display = "block";
+            workPlaceOutput.style.display = "none";
+        });
+    }
+
+    function clearInputText() {
+        textInput.value = '';
+        changeButtonCondition();
+    }
+
+    function clearOutputText() {
+        textInput.value = '';
+        textOutput.value = '';
+        arrowBack.click();
+        changeButtonCondition();
+    }
+    
+
+    function copyText() {
+        copyTextButton.addEventListener('click', function() {
+            var originalText = copyTextButton.innerText;
+            copyTextButton.innerText = "Скопировано!";
+            setTimeout(() => {
+                copyTextButton.innerText = originalText;
+            }, 1500);
+            
+            hiddenOutput.select();
+            document.execCommand("copy");
+            console.log(copyTextButton.value);
+            console.log(hiddenOutput.value);
+        });
+        
+    }
+
+    function changeButtonCondition() {
+        if (textInput.value.length != '') {
+            runTypographButton.classList.remove('disabled');
+            runTypographButton.addEventListener('click', callTypograph);
+            clearInput.classList.remove('disabled');
+            clearInput.addEventListener('click', clearInputText);
+        } else {
+            runTypographButton.classList.add('disabled');
+            runTypographButton.removeEventListener('click', callTypograph);
+            clearInput.classList.add('disabled');
+            clearInput.removeEventListener('click', clearInputText);
+        }
+    }
+
+    function textInputEventListener() {
+        textInput.addEventListener('input', function() {
+            changeButtonCondition();
+          });
+    }
+
+    function callTypograph() {
+        textOutput.innerHTML = hiddenOutput.value = runTypograph(textInput.value);
+        workPlaceInput.style.display = "none";
+        workPlaceOutput.style.display = "block";
+    }
+
+    function showWorkResult(resultText) {
+        workResult.innerHTML = resultText;
     }
 
     function dataFromFiles() {
-        // Неразрывные пробелы
-        // Читаем нужные частицы и предлоги из файла
-        var noBreakSpaceFileContent = readFile("noBreakSpace.txt")
         // Пробелы ПЕРЕД
-        var regexpBeforeNBSP = /(beforeNBSP = )(.*)/gm
-        var matchBeforeNBSP = noBreakSpaceFileContent.match(regexpBeforeNBSP)
-        _dataBeforeNBSP = matchBeforeNBSP[0].replace(regexpBeforeNBSP, "$2")
+        _dataBeforeNBSP = noBreakSpace_beforeNBSP;
 
         // Пробелы ПОСЛЕ
-        var regexpAfterNBSP = /(afterNBSP = )(.*)/gm
-        var matchAfterNBSP = noBreakSpaceFileContent.match(regexpAfterNBSP)
-        _dataAfterNBSP = matchAfterNBSP[0].replace(regexpAfterNBSP, "$2")
+        _dataAfterNBSP = noBreakSpace_afterNBSP;
 
-        // Читаем Ё файл
-        const yoFileContent = readFile("yo.txt")
-        var yoData = yoFileContent
-        // На основе файла создаём ассоциативный массив
+        // Разбиваем строку с Ё словами на массив строк, используя разделитель пробел.
+        var yoData = yo_data.split(" ");
+        
+        // На основе массива yoData создаём ассоциативный массив _yoDict
         // словоБезЁ — словоСЁ
-        yoData = yoData.replace(/(.*ё.*)/gm, function (match, p1, offset, string) {
+        yoData.forEach(function(item, index, array) {
             // Добавление в массив пары ключ(слово_с_е)–значение(слово_с_ё)
-            _yoDict[p1.replace(/ё/g, "е")] = p1
-        })
+            _yoDict[item.replace(/ё/g, "е")] = item;
+        });
 
-        // Читаем файл с телефонными кодами России
-        phoneCodeRuFileContent = readFile("phoneCodeRu.txt")
-        _phoneCodeRu = phoneCodeRuFileContent
 
-        // Читаем месяцы и дни недели из файла
-        var monthWeekdayFileContent = readFile("monthWeekday.txt")
+        // Телефонные коды России
+        _phoneCodeRu = phoneCodeRu_phoneCode;
+
         // Месяц
-        var regexpMonth = /(month = )(.*)/gm
-        var matchMonth = monthWeekdayFileContent.match(regexpMonth)
-        _dataMonth = matchMonth[0].replace(regexpMonth, "$2")
+        _dataMonth = monthWeekday_month;
         // Месяц сокращённый
-        var regexpMonthShort = /(monthShort = )(.*)/gm
-        var matchMonthShort = monthWeekdayFileContent.match(regexpMonthShort)
-        _dataMonthShort = matchMonthShort[0].replace(regexpMonthShort, "$2")
+        _dataMonthShort = monthWeekday_monthShort;
         // День недели
-        var regexpWeekday = /(weekday = )(.*)/gm
-        var matchWeekday = monthWeekdayFileContent.match(regexpWeekday)
-        _dataWeekday = matchWeekday[0].replace(regexpWeekday, "$2")
+        _dataWeekday = monthWeekday_weekday;
         // День недели сокращённый
-        var regexpWeekdayShort = /(weekdayShort = )(.*)/gm
-        var matchWeekdayShort = monthWeekdayFileContent.match(regexpWeekdayShort)
-        _dataWeekdayShort = matchWeekdayShort[0].replace(regexpWeekdayShort, "$2")
+        _dataWeekdayShort = monthWeekday_weekdayShort;
     }
-    dataFromFiles()
+    
+    dataFromFiles();
+    changeButtonCondition();
+    textInputEventListener();
+    backLink();
+    copyText();
+
+    function highlightBlock(text) {
+        return ('<span class=highlightBlock>' + text + '</span>');
+    }
 
     function runTypograph(stringToParse) {
+        var workResult = ""
+
+        var _nbsp = '\u00A0'
+        var _counterPunctuation = 0
+        var _counterReplaceQuoteMarks = 0
+        var _counterDeleteSpaces = 0
+        var _counterRemoveEndDotInSingleString = 0
+        var _counterAddNoBreakSpace = 0
+        var _counterYO = 0
+        var _counterDash = 0
+        var _counterPhoneNumber = 0
+        var _counterReplaceDotWithComma = 0
+        var _counterRub = 0
+        var _counterCurrency = 0
+        var _counterLowerCase = 0
+        var _counterOther = 0
+
         function punctuation() {
             // Заменяем ...? ⟶ ?‥ и ...! ⟶ !‥
             stringToParse = stringToParse.replace(/(\.{2,}|…)(\!|\?)/gm, function (match, p1, p2) {
                 _counterPunctuation++
                 return p2 + '\u2025'
+                // return highlightBlock(p2 + '\u2025');
             })
             // Заменяем ?... ⟶ ?‥ и !... ⟶ !‥
-            stringToParse = stringToParse.replace(/(\!|\?)(\.{3,}|…)/gm, function (match, p1) {
+            stringToParse = stringToParse.replace(/(\!|\?)(\.{2,3}|…)/gm, function (match, p1) {
                 _counterPunctuation++
                 return p1 + '\u2025'
+                // return highlightBlock(p1 + '\u2025');
             })
             // Заменяем ... на знак многоточия … U+2026
             stringToParse = stringToParse.replace(/\.{3,}/gm, function () {
                 _counterPunctuation++
                 return '\u2026'
+                // return highlightBlock('\u2026');
             })
             // Заменяем несколько знаков ? на один
             stringToParse = stringToParse.replace(/(\?){2,}/gm, function (match, p1) {
                 _counterPunctuation++
                 return p1
+                // return highlightBlock(p1);
             })
             // Заменяем несколько знаков ! на один
             stringToParse = stringToParse.replace(/(\!){2,}/gm, function (match, p1) {
                 _counterPunctuation++
                 return p1
+                // return highlightBlock(p1);
             })
             // Заменяем несколько знаков . на один
             stringToParse = stringToParse.replace(/(\.){2,}/gm, function (match, p1) {
                 _counterPunctuation++
                 return p1
+                // return highlightBlock(p1);
             })
             // Заменяем несколько знаков , на один
             stringToParse = stringToParse.replace(/(\,){2,}/gm, function (match, p1) {
                 _counterPunctuation++
                 return p1
+                // return highlightBlock(p1);
             })
             // Заменяем несколько знаков ; на один
             stringToParse = stringToParse.replace(/(\;){2,}/gm, function (match, p1) {
                 _counterPunctuation++
                 return p1
+                // return highlightBlock(p1);
             })
             // Заменяем несколько знаков : на один
             stringToParse = stringToParse.replace(/(\:){2,}/gm, function (match, p1) {
                 _counterPunctuation++
                 return p1
+                // return highlightBlock(p1);
             })
             // Заменяем несколько знаков - на один
             stringToParse = stringToParse.replace(/(\-){2,}/gm, function (match, p1) {
                 _counterPunctuation++
                 return p1
+                // return highlightBlock(p1);
             })
             // Заменяем !? ⟶ ?!
             stringToParse = stringToParse.replace(/(\!\?)/gm, function () {
                 _counterPunctuation++
                 return '?!'
+                // return highlightBlock('?!');
             })
             // Переносим точку внутри кавычки наружу
             stringToParse = stringToParse.replace(/([^\.])(\.)([\u0022\»\“])(\.)?/gm, function (match, p1, p2, p3) {
                 _counterPunctuation++
                 return p1 + p3 + p2
+                // return highlightBlock(p1 + p3 + p2);
             })
         }
 
@@ -162,10 +233,12 @@ var onRun = function (context) {
             stringToParse = stringToParse.replace(/(^|\s)[\u0022\u0027]/g, function (match, p1) {
                 _counterReplaceQuoteMarks++
                 return p1 + '«'
+                // return p1 + highlightBlock('«');
             })
             stringToParse = stringToParse.replace(/(«)[\u0022\u0027]/g, function (match, p1) {
                 _counterReplaceQuoteMarks++
                 return p1 + '«'
+                // return p1 + highlightBlock('«');
             })
 
             // Правая кавычка: ищем " или ' перед которыми идёт не пробельный символ
@@ -173,10 +246,12 @@ var onRun = function (context) {
             stringToParse = stringToParse.replace(/([^\s])[\u0022\u0027]([\s\u0022\u0027\»\,\.\…\:\;\!\?\}\u0029\u005D]|$)/gm, function (match, p1, p2) {
                 _counterReplaceQuoteMarks++
                 return p1 + '»' + p2
+                // return p1 + highlightBlock('»') + p2;
             })
             stringToParse = stringToParse.replace(/(»)[\u0022\u0027]/g, function (match, p1) {
                 _counterReplaceQuoteMarks++
                 return p1 + '»'
+                // return p1 + highlightBlock('»');
             })
 
             var newString1 = stringToParse
@@ -911,6 +986,13 @@ var onRun = function (context) {
             })
         }
 
+        function replaceNBSP() {
+            var regexp = new RegExp(_nbsp, 'gm')
+                stringToParse = stringToParse.replace(regexp, function (match, p1) {
+                    return '&amp;nbsp;'
+                })
+        }
+
         punctuation()
         replaceQuoteMarks()
         deleteSpaces()
@@ -923,58 +1005,68 @@ var onRun = function (context) {
         numbers()
         lowerCase()
         misc()
+        replaceNBSP()
+
+        if (_counterPunctuation > 0) {
+            workResult = workResult + "Знаков пунктуации исправлено: " + _counterPunctuation + "\n"
+        }
+        if (_counterDeleteSpaces > 0) {
+            workResult = workResult + "Лишних пробелов удалено: " + _counterDeleteSpaces + "\n"
+        }
+        if (_counterRemoveEndDotInSingleString > 0) {
+            workResult = workResult + "Точек в заголовках удалено: " + _counterRemoveEndDotInSingleString + "\n"
+        }
+        if (_counterReplaceQuoteMarks > 0) {
+            workResult = workResult + "Кавычек заменено:  " + _counterReplaceQuoteMarks + "\n"
+        }
+        if (_counterAddNoBreakSpace > 0) {
+            workResult = workResult + "Неразрывных пробелов проставлено:  " + _counterAddNoBreakSpace + "\n"
+        }
+        if (_counterDash > 0) {
+            workResult = workResult + "Тире заменено:  " + _counterDash + "\n"
+        }
+        if (_counterReplaceDotWithComma > 0) {
+            workResult = workResult + "Точек в числах заменено:  " + _counterReplaceDotWithComma + "\n"
+        }
+        if (_counterRub > 0) {
+            workResult = workResult + "Знаков рубля проставлено:  " + _counterRub++ + "\n"
+        }
+        if (_counterCurrency > 0) {
+            workResult = workResult + "Знаков валюты исправлено:  " + _counterCurrency++ + "\n"
+        }
+        if (_counterPhoneNumber > 0) {
+            workResult = workResult + "Телефонных номеров исправлено:  " + _counterPhoneNumber + "\n"
+        }
+        if (_counterLowerCase > 0) {
+            workResult = workResult + "Слов в нижний регистр переведено:  " + _counterLowerCase + "\n"
+        }
+        if (_counterYO > 0) {
+            workResult = workResult + "Е на Ё заменено:  " + _counterYO + "\n"
+        }
+        if (_counterOther > 0) {
+            workResult = workResult + "Разное:  " + _counterOther + "\n"
+        }
+    
+        if (workResult == '') {
+            workResult = 'Ничего не исправлено'
+            copyTextButton.classList.add('disabled');
+        } else {
+            workResult = workResult
+
+            copyTextButton.classList.remove('disabled');
+        }
+    
+        showWorkResult(workResult);
+
         return stringToParse
     }
-    selectedLayers()
 
-    if (_counterPunctuation > 0) {
-        workResult = workResult + "Знаков пунктуации исправлено: " + _counterPunctuation + "\n"
-    }
-    if (_counterDeleteSpaces > 0) {
-        workResult = workResult + "Лишних пробелов удалено: " + _counterDeleteSpaces + "\n"
-    }
-    if (_counterRemoveEndDotInSingleString > 0) {
-        workResult = workResult + "Точек в заголовках удалено: " + _counterRemoveEndDotInSingleString + "\n"
-    }
-    if (_counterReplaceQuoteMarks > 0) {
-        workResult = workResult + "Кавычек заменено:  " + _counterReplaceQuoteMarks + "\n"
-    }
-    if (_counterAddNoBreakSpace > 0) {
-        workResult = workResult + "Неразрывных пробелов проставлено:  " + _counterAddNoBreakSpace + "\n"
-    }
-    if (_counterDash > 0) {
-        workResult = workResult + "Тире заменено:  " + _counterDash + "\n"
-    }
-    if (_counterReplaceDotWithComma > 0) {
-        workResult = workResult + "Точек в числах заменено:  " + _counterReplaceDotWithComma + "\n"
-    }
-    if (_counterRub > 0) {
-        workResult = workResult + "Знаков рубля проставлено:  " + _counterRub++ + "\n"
-    }
-    if (_counterCurrency > 0) {
-        workResult = workResult + "Знаков валюты исправлено:  " + _counterCurrency++ + "\n"
-    }
-    if (_counterPhoneNumber > 0) {
-        workResult = workResult + "Телефонных номеров исправлено:  " + _counterPhoneNumber + "\n"
-    }
-    if (_counterLowerCase > 0) {
-        workResult = workResult + "Слов в нижний регистр переведено:  " + _counterLowerCase + "\n"
-    }
-    if (_counterYO > 0) {
-        workResult = workResult + "Е на Ё заменено:  " + _counterYO + "\n"
-    }
-    if (_counterOther > 0) {
-        workResult = workResult + "Разное:  " + _counterOther + "\n"
-    }
+    
 
-    if (workResult == '') {
-        workResult = 'Ничего не исправлено'
-    } else {
-        workResult = workResult
-    }
+})();
+
     // Вызываем окно с результатами работы
-    sketch.UI.alert("SBOL Typograph", workResult);
-}
+    // sketch.UI.alert("SBOL Typograph", workResult);
 
 
 /*

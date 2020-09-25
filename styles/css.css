@@ -178,6 +178,40 @@ samp {
     justify-content: space-between;
 }
 
+.topPanel {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    padding: 1rem;
+}
+
+.topPanel__iconBody {
+    padding: .5rem;
+    border-radius: 50%;
+    line-height: 0;
+    -webkit-transition: .3s ease-in-out;
+    transition: .3s ease-in-out;
+}
+
+.topPanel__iconBody:hover {
+    background: rgba(0, 0, 0, .05);
+    cursor: pointer;
+}
+
+.topPanel__icon {
+    width: 2rem;
+    opacity: .5;
+    -webkit-transition: .3s ease-in-out;
+    transition: .3s ease-in-out;
+}
+
+.topPanel__iconBody:hover .topPanel__icon {
+    opacity: 1;
+}
+
 .workPlace__input, .workPlace__output {
     flex: 1;
     border: 1px solid rgba(0, 0, 0, .1);
@@ -186,14 +220,36 @@ samp {
     box-shadow: 0 1px 3px 0px rgba(0, 0, 0, .1);
 }
 
+.topPanel__iconBody.disabled,
+.topPanel__iconBody.disabled:hover {
+    filter: alpha(opacity=50);
+    -moz-opacity: .5;
+    opacity: .5;
+    cursor: not-allowed;
+}
+
 .workPlace__input {
-    margin-right: 1rem;
+    /* margin-right: 1rem; */
+    background: #fff;
 }
 
 .workPlace__output {
-    margin-left: 1rem;
+    /* margin-left: 1rem; */
 }
 
+.hiddenOutput {
+    width: 0;
+    height: 0;
+    outline: none;
+    resize: none;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    border: 0;
+    background: transparent;
+    position: absolute;
+    top: -9999999px;
+    left: -99999999px;
+}
 .workPlace__textarea, .workPlace__textarea:focus {
     word-wrap: break-word;
     overflow-y: auto;
@@ -204,14 +260,27 @@ samp {
     font: inherit;
     background: 0 0;
     border: 0;
-    width: 100%;
-    height: 40vh;
+    width: calc(100% - 2rem);
+    min-height: 40vh;
     outline: none;
-    margin: 1rem;
+    margin: 0 1rem 1rem 1rem;
+}
+
+.workResult__textarea {
+    display: block;
+    padding: .5rem 1rem;
+    background: #e0e0e0;
+    margin: 0;
+    font-family: "Courier New", monospace;
+}
+
+.workPlace__textarea.textOutput {
+
 }
 
 .button {
-    border-radius: .4rem;
+    border-radius: 0 0 .4rem .4rem;
+    padding: 1rem;
     border: none;
     -webkit-box-shadow: inset 0 -2px 0 0 rgba(0, 0, 0, .2);
     box-shadow: inset 0 -2px 0 0 rgba(0, 0, 0, .2);
@@ -224,7 +293,6 @@ samp {
     text-transform: uppercase;
     letter-spacing: 0.1rem;
     line-height: 1.35rem;
-    padding: .5rem;
     width: 100%;
     -webkit-transition: all 0.3s ease;
     transition: all 0.3s ease;
@@ -264,10 +332,32 @@ samp {
 }
 
 .runTypographButton {
-    border-radius: 0 0 .4rem .4rem;
-    padding: 1rem;
+    
 }
 
+.highlightBlock {
+    background-color: plum;
+}
+
+
+summary {
+    border: 0;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    color: #08A652;
+    border-bottom: 1px dotted #08A652;
+    display: inline-block;
+}
+
+summary:hover {
+    border-bottom: 1px dotted transparent;
+    cursor: pointer;
+    filter: brightness(110%);
+}
+
+summary:focus {
+    outline: none;
+}
 
 @media screen and (min-width: 1200px) {
     /* Срабатывает когда ширина браузера БОЛЬШЕ 1200px */
