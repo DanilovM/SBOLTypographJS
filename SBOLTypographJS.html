@@ -1,212 +1,221 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>SBOL Typograph</title>
-    <meta name="description" content="" />
-    <meta name="keywords" content="" />
-    <link rel="stylesheet" type="text/css" href="styles/css.css" />
-    <link rel="icon" type="image/png" href="img/favicon.png" sizes="32x32" />
-    <meta name="theme-color" content="#bddfdf">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>SBOL Typograph</title>
+  <meta name="description" content="" />
+  <meta name="keywords" content="" />
+  <link rel="stylesheet" type="text/css" href="styles/css.css" />
+  <link rel="icon" type="image/png" href="img/favicon.png" sizes="32x32" />
+  <meta name="theme-color" content="#bddfdf">
 </head>
 
 <body>
 
-    <header class="header">
-        <div class="container">
-            <div class="header__content">
-                <div class="header__left">
-                    <img src="img/sboltypograph_logo.svg" class="header__logo">
-                    <div class="header__titleContent">
-                        <h1 class="header__title">SBOL Typograph JS</h1>
-                    </div>
-                </div>
-                <div class="header__right">
-                    <div class="header__titleTxt">Исправление и форматирование текста на основе правил типографики и&nbsp;редполитики СБОЛ</div>
-                </div>
-
-            </div>
-        </div>
-    </header>
-
+  <header class="header">
     <div class="container">
-        <div class="workPlace">
-            <section class="workPlace__input">
-                <div class="topPanel">
-                    <span></span>
-                    <span class="topPanel__iconBody clearInput" title="Очистить"><img src="img/icon_clear.svg" class="topPanel__icon"></span>
-                </div>
-                <textarea autofocus id="textInput" class="workPlace__textarea" placeholder="Текст для исправления"></textarea>
-                <button class="button runTypographButton">Исправить</button>
-            </section>
-            <section class="workPlace__output" style="display: none;">
-                <!-- <textarea readonly id="textareaOutput" class="workPlace__textarea"></textarea> -->
-                <div class="topPanel">
-                    <span class="topPanel__iconBody arrowBack" title="Назад"><img src="img/icon_arrow-left.svg" class="topPanel__icon"></span>
-                    <span class="topPanel__iconBody clearOutput" title="Очистить и вернуться"><img src="img/icon_clear.svg" class="topPanel__icon"></span>
-                </div>
-                <div id="textOutput" class="workPlace__textarea textOutput"></div>
-                <textarea class="hiddenOutput"></textarea>
-                <pre id="workResult" class="workResult__textarea"></pre>
-                <button class="button copyTextButton">Скопировать текст</button>
-            </section>
+      <div class="header__content">
+        <div class="header__left">
+          <img src="img/sboltypograph_logo.svg" class="header__logo">
+          <div class="header__titleContent">
+            <h1 class="header__title">SBOL Typograph JS</h1>
+          </div>
+        </div>
+        <div class="header__right">
+          <div class="header__titleTxt">Исправление и&nbsp;форматирование текста на&nbsp;основе правил типографики и&nbsp;редполитики СБОЛ</div>
         </div>
 
+      </div>
     </div>
-    
-    <div class="container">
-        <details>
-            <summary>Возможности</summary>
-        <section>
-            <p>Плагин форматирует текст в&nbsp;макетах Sketch для&nbsp;приведения его&nbsp;к&nbsp;правильному виду с&nbsp;точки зрения типографики и&nbsp;редполитики Сбербанк&nbsp;Онлайн.</p>
-            <p>Помогает автоматически расставить неразрывные пробелы, убрать висячие предлоги и&nbsp;союзы, исправить "простые кавычки" на&nbsp;«ёлочки» и&nbsp;„лапки“. Правильно расставит дефис, длинное и&nbsp;среднее тире, уберёт точку в&nbsp;заголовке,
-                приведёт телефонные номера к&nbsp;правильному виду. Исправит слова «вы», «банк», «приложение», «условия», «сайт» на&nbsp;нижний регистр, разобьёт длинные числа по&nbsp;разрядам и&nbsp;заменит букву «е» на&nbsp;«ё» в&nbsp;словах, где она
-                должна употребляться.</p>
-        </section>
+  </header>
 
-        <section>
-            <h4>Правила, используемые в&nbsp;плагине</h4>
-            <div class="pluginRules">
-                <div class="pluginRules__item">
-                    <div class="pluginRules__title">Ёфикатор</div>
-                    <div class="pluginRules__content">
-                        <ul class="listBlock">
-                            <li>Замена буквы <em>е</em> на&nbsp;<em>ё</em> в&nbsp;словах, где&nbsp;она&nbsp;должна употребляться</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="pluginRules__item">
-                    <div class="pluginRules__title">Кавычки</div>
-                    <div class="pluginRules__content">
-                        <ul class="listBlock">
-                            <li>Замена "простых кавычек" на&nbsp;«ёлочки» и&nbsp;„лапки“ <samp>«„Как это скучно!“&nbsp;— воскликнул я невольно»</samp></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="pluginRules__item">
-                    <div class="pluginRules__title">Телефонные номера</div>
-                    <div class="pluginRules__content">
-                        <ul class="listBlock">
-                            <li>Приведение российских телефонных номеров к&nbsp;правильному формату</li>
-                            <samp>Федеральный номер: 8 (800) 555-55-50</samp>
-                            <samp>Городской номер: +7 (495) 500-55-50, +7 (4212) 79-40-35</samp>
-                            <samp>Короткий номер: 900</samp>
-                        </ul>
-                    </div>
-                </div>
-                <div class="pluginRules__item">
-                    <div class="pluginRules__title">Тире</div>
-                    <div class="pluginRules__content">
-                        <ul class="listBlock">
-                            <li>В&nbsp;начале строки или&nbsp;предложения, длинное тире + неразрывный пробел <samp>— Это я, почтальон Печкин.</samp></li>
-                            <li>Для&nbsp;диапазонов месяцев и&nbsp;дней недели используем среднее тире без&nbsp;пробелов <samp>январь–март, понедельник–суббота</samp></li>
-                            <li>Внутри текста используем неразрывный пробел + длинное тире <samp>А гений и злодейство — две вещи несовместные</samp></li>
-                            <li>Для&nbsp;диапазонов чисел используем среднее тире без&nbsp;пробелов <samp>2002–2009, XI–XII</samp></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="pluginRules__item">
-                    <div class="pluginRules__title">Пунктуация</div>
-                    <div class="pluginRules__content">
-                        <ul class="listBlock">
-                            <li>Замена <em>!?</em> на&nbsp;<em>?!</em></li>
-                            <li>Замена <em>...?</em> на&nbsp;<em>?‥</em> и&nbsp;<em>...!</em> на&nbsp;<em>!‥</em></li>
-                            <li>Замена <em>?...</em> на&nbsp;<em>?‥</em> и&nbsp;<em>!...</em> на&nbsp;<em>!‥</em></li>
-                            <li>Замена <em>...</em> на&nbsp;знак многоточия </em>…</em>
-                            </li>
-                            <li>Заменяем несколько знаков <em>? ! . , ; : -</em> на&nbsp;один <samp>Готово!!! ⟶ Готово!</samp></li>
-                            <li>Перенос точки за&nbsp;закрывающуюся кавычку</li>
-                            <li>Удаление точки в&nbsp;конце одиночного предложения</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="pluginRules__item">
-                    <div class="pluginRules__title">Лишние пробелы</div>
-                    <div class="pluginRules__content">
-                        <ul class="listBlock">
-                            <li>Удаление пробела после <em>« „ ( [</em></li>
-                            <li>Удаление пробела перед <em>. … : , ; ? ! » “ "" ) ]</em></li>
-                            <li>Удаление пробела между числом&nbsp;и&nbsp;<em>%</em> <samp>23%</samp></li>
-                            <li>Удаление пробелов в&nbsp;начале и&nbsp;конце строки</li>
-                            <li>Удаление двойных пробелов</li>
-                        </ul>
-                    </div>
-                </div>
+  <div class="container">
 
-                <div class="pluginRules__item">
-                    <div class="pluginRules__title">Строчные буквы</div>
-                    <div class="pluginRules__content">
-                        <ul class="listBlock">
-                            <li>Слова <em>вы, банк, приложение, условия, сайт</em> — со&nbsp;строчной буквы. С&nbsp;прописной буквы — если слово первое в&nbsp;предложении.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="pluginRules__item">
-                    <div class="pluginRules__title">Числа</div>
-                    <div class="pluginRules__content">
-                        <ul class="listBlock">
-                            <li>Разбивка длинных чисел по&nbsp;разрядам <samp>2345123 ⟶ 2 345 123</samp></li>
-                            <li>Замена в&nbsp;числах точки на&nbsp;запятую <samp>143.56 ⟶ 143,56</samp></li>
-                            <li>После <em>тыс.</em>&nbsp;должна быть точка, а&nbsp;после <em>млн</em>, <em>млрд</em>, <em>трлн</em> точки быть не&nbsp;должно <samp>5 тыс., 2 млн, 1 млрд, 3 трлн</samp></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="pluginRules__item">
-                    <div class="pluginRules__title">Валюта</div>
-                    <div class="pluginRules__content">
-                        <ul class="listBlock">
-                            <li>Замена <em>USD и&nbsp;EUR</em> на&nbsp;<em>$ и&nbsp;€</em> <samp>20usd ⟶ 20 $</samp></li>
-                            <li>Замена <em>Р, р., руб., RUR, RUB</em> на&nbsp;<em>₽</em> <samp>789 руб. ⟶ 789 ₽</samp></li>
-                            <li>Перенос копеек в&nbsp;основную сумму <samp>45 руб. 5 коп. ⟶ 45,05 ₽</samp></li>
-                            <li>Перенос знака валюты после цифр и&nbsp;отделение его&nbsp;неразрывным пробелом <samp>$ 109 ⟶ 109 $, 109$ ⟶ 109 $</samp></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="pluginRules__item">
-                    <div class="pluginRules__title">Неразрывный пробел</div>
-                    <div class="pluginRules__content">
-                        <ul class="listBlock">
-                            <li>Неразрывный пробел между инициалами и&nbsp;фамилией. Инициалы слитно, затем неразрывный пробел и&nbsp;фамилия. Или&nbsp;фамилия, неразрывный пробел и&nbsp;слитно инициалы. <samp>А.А.&nbsp;Иванов, Петров К.П.</samp></li>
-                            <li>Неразрывные пробелы между словом и&nbsp;<em>и т.д., и т.п., и др.</em></li>
-                            <li>Неразрывный пробел между числом и&nbsp;следующим словом</li>
-                            <li>Неразрывный пробел перед <em>б, бы, ж, же, ли, ль</em></li>
-                            <li>Неразрывный пробел перед последним коротким словом в&nbsp;предложении или&nbsp;одиночной строке</li>
-                            <li>Неразрывный пробел после короткого слова</li>
-                            <li>Неразрывный пробел после <em>г., обл., кр., ст., пос., с., д., ул., пер., пр., пр-т., просп., пл., бул., б-р., наб., ш., туп., оф., кв., комн., под., мкр., уч., вл., влад., стр., корп., литер, эт., пгт., стр., гл., рис., илл.,
-                                ст., п., c., а, б, без, безо, будто, бы, в, во, ведь, вне, вот, всё, где, да, даже, для, до, если, есть, ещё, же, за, и, из, изо, из-за, из-под, или, иль, к, ко, как, ли, ли, либо, между, на, над, надо, не, ни, но, о, об,
-                                обо, около, оно, от, ото, перед, по, по-за, по-над, под, подо, после, при, про, ради, с, со, сквозь, так, также, там, тем, то, тогда, того, тоже, у, хоть, хотя, чего, через, что, чтобы, это, №, §, АО, ОАО, ЗАО, ООО, ПАО</em></li>
-                        </ul>
+    <section class="workPlace__input">
+      <div class="topPanel">
+        <span class="nbsptype input">
+          <span class="nbsptype__title">Какой неразрывный пробел использовать:</span>
+          <span id="nbsptypeRadioBlock">
+            <input type="radio" name="nbsptype" value="html" id="nbsptypeHtml" class="nbsptype__radio" checked><label class="nbsptype__label" for="nbsptypeHtml">HTML &amp;nbsp;</label>
+            <input type="radio" name="nbsptype" value="unicode" id="nbsptypeUnicode" class="nbsptype__radio"><label class="nbsptype__label" for="nbsptypeUnicode">Unicode \u00A0</label>
+            <input type="radio" name="nbsptype" value="txt" id="nbsptypeTxt" class="nbsptype__radio"><label class="nbsptype__label" for="nbsptypeTxt">Текстовый</label>
+          </span>
+        </span>
+        <span class="topPanel__iconBody clearInput" title="Очистить"><img src="img/icon_clear.svg" class="topPanel__icon"></span>
+      </div>
+      <textarea autofocus id="textInput" class="workPlace__textarea" placeholder="Текст для исправления"></textarea>
+      <button class="button runTypographButton">Исправить</button>
+    </section>
+    <section class="workPlace__output" style="display: none;">
+      <div class="topPanel">
+        <span class="topPanel__iconBody arrowBack" title="Вернуться"><img src="img/icon_arrow-left.svg" class="topPanel__icon"></span>
+        <span class="nbsptype output"></span>
+        <span class="topPanel__iconBody clearOutput" title="Очистить и вернуться"><img src="img/icon_clear.svg" class="topPanel__icon"></span>
+      </div>
+      <div id="textOutput" class="workPlace__textarea textOutput"></div>
+      <textarea class="hiddenOutput"></textarea>
+      <pre class="workStatisticsPlace"></pre>
+      <button class="button copyTextButton">Скопировать текст</button>
+    </section>
 
-                    </div>
-                </div>
-                <div class="pluginRules__item">
-                    <div class="pluginRules__title">Разное</div>
-                    <div class="pluginRules__content">
-                        <ul class="listBlock">
-                            <li>Правильное написание <em>Mastercard, Visa, Мир, Google Pay, Apple Pay, Push-уведомления, ПИН-код, QR-код, сим-карта, СVV-код, СVС-код, СVV2-код, СVС2-код, CVV, CVC, СМС, Wi-Fi, email, офлайн, онлайн, мск</em></li>
-                        </ul>
-                    </div>
-                </div>
+
+  </div>
+
+  <div class="container">
+    <details>
+      <summary>Возможности</summary>
+      <section>
+        <p>Плагин форматирует текст в&nbsp;макетах Sketch для&nbsp;приведения его&nbsp;к&nbsp;правильному виду с&nbsp;точки зрения типографики и&nbsp;редполитики Сбербанк&nbsp;Онлайн.</p>
+        <p>Помогает автоматически расставить неразрывные пробелы, убрать висячие предлоги и&nbsp;союзы, исправить "простые кавычки" на&nbsp;«ёлочки» и&nbsp;„лапки“. Правильно расставит дефис, длинное и&nbsp;среднее тире, уберёт точку
+          в&nbsp;заголовке,
+          приведёт телефонные номера к&nbsp;правильному виду. Исправит слова «вы», «банк», «приложение», «условия», «сайт» на&nbsp;нижний регистр, разобьёт длинные числа по&nbsp;разрядам и&nbsp;заменит букву «е» на&nbsp;«ё» в&nbsp;словах, где она
+          должна употребляться.</p>
+      </section>
+
+      <section>
+        <h4>Правила, используемые в&nbsp;плагине</h4>
+        <div class="pluginRules">
+          <div class="pluginRules__item">
+            <div class="pluginRules__title">Ёфикатор</div>
+            <div class="pluginRules__content">
+              <ul class="listBlock">
+                <li>Замена буквы <em>е</em> на&nbsp;<em>ё</em> в&nbsp;словах, где&nbsp;она&nbsp;должна употребляться</li>
+              </ul>
+            </div>
+          </div>
+          <div class="pluginRules__item">
+            <div class="pluginRules__title">Кавычки</div>
+            <div class="pluginRules__content">
+              <ul class="listBlock">
+                <li>Замена "простых кавычек" на&nbsp;«ёлочки» и&nbsp;„лапки“ <samp>«„Как это скучно!“&nbsp;— воскликнул я невольно»</samp></li>
+              </ul>
+            </div>
+          </div>
+          <div class="pluginRules__item">
+            <div class="pluginRules__title">Телефонные номера</div>
+            <div class="pluginRules__content">
+              <ul class="listBlock">
+                <li>Приведение российских телефонных номеров к&nbsp;правильному формату</li>
+                <samp>Федеральный номер: 8 (800) 555-55-50</samp>
+                <samp>Городской номер: +7 (495) 500-55-50, +7 (4212) 79-40-35</samp>
+                <samp>Короткий номер: 900</samp>
+              </ul>
+            </div>
+          </div>
+          <div class="pluginRules__item">
+            <div class="pluginRules__title">Тире</div>
+            <div class="pluginRules__content">
+              <ul class="listBlock">
+                <li>В&nbsp;начале строки или&nbsp;предложения, длинное тире + неразрывный пробел <samp>— Это я, почтальон Печкин.</samp></li>
+                <li>Для&nbsp;диапазонов месяцев и&nbsp;дней недели используем среднее тире без&nbsp;пробелов <samp>январь–март, понедельник–суббота</samp></li>
+                <li>Внутри текста используем неразрывный пробел + длинное тире <samp>А гений и злодейство — две вещи несовместные</samp></li>
+                <li>Для&nbsp;диапазонов чисел используем среднее тире без&nbsp;пробелов <samp>2002–2009, XI–XII</samp></li>
+              </ul>
+            </div>
+          </div>
+          <div class="pluginRules__item">
+            <div class="pluginRules__title">Пунктуация</div>
+            <div class="pluginRules__content">
+              <ul class="listBlock">
+                <li>Замена <em>!?</em> на&nbsp;<em>?!</em></li>
+                <li>Замена <em>...?</em> на&nbsp;<em>?‥</em> и&nbsp;<em>...!</em> на&nbsp;<em>!‥</em></li>
+                <li>Замена <em>?...</em> на&nbsp;<em>?‥</em> и&nbsp;<em>!...</em> на&nbsp;<em>!‥</em></li>
+                <li>Замена <em>...</em> на&nbsp;знак многоточия </em>…</em>
+                </li>
+                <li>Заменяем несколько знаков <em>? ! . , ; : -</em> на&nbsp;один <samp>Готово!!! ⟶ Готово!</samp></li>
+                <li>Перенос точки за&nbsp;закрывающуюся кавычку</li>
+                <li>Удаление точки в&nbsp;конце одиночного предложения</li>
+              </ul>
+            </div>
+          </div>
+          <div class="pluginRules__item">
+            <div class="pluginRules__title">Лишние пробелы</div>
+            <div class="pluginRules__content">
+              <ul class="listBlock">
+                <li>Удаление пробела после <em>« „ ( [</em></li>
+                <li>Удаление пробела перед <em>. … : , ; ? ! » “ "" ) ]</em></li>
+                <li>Удаление пробела между числом&nbsp;и&nbsp;<em>%</em> <samp>23%</samp></li>
+                <li>Удаление пробелов в&nbsp;начале и&nbsp;конце строки</li>
+                <li>Удаление двойных пробелов</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="pluginRules__item">
+            <div class="pluginRules__title">Строчные буквы</div>
+            <div class="pluginRules__content">
+              <ul class="listBlock">
+                <li>Слова <em>вы, банк, приложение, условия, сайт</em> — со&nbsp;строчной буквы. С&nbsp;прописной буквы — если слово первое в&nbsp;предложении.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="pluginRules__item">
+            <div class="pluginRules__title">Числа</div>
+            <div class="pluginRules__content">
+              <ul class="listBlock">
+                <li>Разбивка длинных чисел по&nbsp;разрядам <samp>2345123 ⟶ 2 345 123</samp></li>
+                <li>Замена в&nbsp;числах точки на&nbsp;запятую <samp>143.56 ⟶ 143,56</samp></li>
+                <li>После <em>тыс.</em>&nbsp;должна быть точка, а&nbsp;после <em>млн</em>, <em>млрд</em>, <em>трлн</em> точки быть не&nbsp;должно <samp>5 тыс., 2 млн, 1 млрд, 3 трлн</samp></li>
+              </ul>
+            </div>
+          </div>
+          <div class="pluginRules__item">
+            <div class="pluginRules__title">Валюта</div>
+            <div class="pluginRules__content">
+              <ul class="listBlock">
+                <li>Замена <em>USD и&nbsp;EUR</em> на&nbsp;<em>$ и&nbsp;€</em> <samp>20usd ⟶ 20 $</samp></li>
+                <li>Замена <em>Р, р., руб., RUR, RUB</em> на&nbsp;<em>₽</em> <samp>789 руб. ⟶ 789 ₽</samp></li>
+                <li>Перенос копеек в&nbsp;основную сумму <samp>45 руб. 5 коп. ⟶ 45,05 ₽</samp></li>
+                <li>Перенос знака валюты после цифр и&nbsp;отделение его&nbsp;неразрывным пробелом <samp>$ 109 ⟶ 109 $, 109$ ⟶ 109 $</samp></li>
+              </ul>
+            </div>
+          </div>
+          <div class="pluginRules__item">
+            <div class="pluginRules__title">Неразрывный пробел</div>
+            <div class="pluginRules__content">
+              <ul class="listBlock">
+                <li>Неразрывный пробел между инициалами и&nbsp;фамилией. Инициалы слитно, затем неразрывный пробел и&nbsp;фамилия. Или&nbsp;фамилия, неразрывный пробел и&nbsp;слитно инициалы. <samp>А.А.&nbsp;Иванов, Петров К.П.</samp></li>
+                <li>Неразрывные пробелы между словом и&nbsp;<em>и т.д., и т.п., и др.</em></li>
+                <li>Неразрывный пробел между числом и&nbsp;следующим словом</li>
+                <li>Неразрывный пробел перед <em>б, бы, ж, же, ли, ль</em></li>
+                <li>Неразрывный пробел перед последним коротким словом в&nbsp;предложении или&nbsp;одиночной строке</li>
+                <li>Неразрывный пробел после короткого слова</li>
+                <li>Неразрывный пробел после <em>г., обл., кр., ст., пос., с., д., ул., пер., пр., пр-т., просп., пл., бул., б-р., наб., ш., туп., оф., кв., комн., под., мкр., уч., вл., влад., стр., корп., литер, эт., пгт., стр., гл., рис., илл.,
+                    ст., п., c., а, б, без, безо, будто, бы, в, во, ведь, вне, вот, всё, где, да, даже, для, до, если, есть, ещё, же, за, и, из, изо, из-за, из-под, или, иль, к, ко, как, ли, ли, либо, между, на, над, надо, не, ни, но, о, об,
+                    обо, около, оно, от, ото, перед, по, по-за, по-над, под, подо, после, при, про, ради, с, со, сквозь, так, также, там, тем, то, тогда, того, тоже, у, хоть, хотя, чего, через, что, чтобы, это, №, §, АО, ОАО, ЗАО, ООО, ПАО</em></li>
+              </ul>
 
             </div>
-        </section>
+          </div>
+          <div class="pluginRules__item">
+            <div class="pluginRules__title">Разное</div>
+            <div class="pluginRules__content">
+              <ul class="listBlock">
+                <li>Правильное написание <em>Mastercard, Visa, Мир, Google Pay, Apple Pay, Push-уведомления, ПИН-код, QR-код, сим-карта, СVV-код, СVС-код, СVV2-код, СVС2-код, CVV, CVC, СМС, Wi-Fi, email, офлайн, онлайн, мск</em></li>
+              </ul>
+            </div>
+          </div>
 
-        <section>
-            <h4>Книга жалоб и&nbsp;предложений</h4>
-            <p>Telegram: <a href="https://t.me/m_danilov" target="_blank">Mikhail Danilov</a>, email: <a href="mailto:m.danilov@gmail.com">m.danilov@gmail.com</a>
-            </p>
-        </section>
+        </div>
+      </section>
+
+      <section>
+        <h4>Книга жалоб и&nbsp;предложений</h4>
+        <p>Telegram: <a href="https://t.me/m_danilov" target="_blank">Mikhail Danilov</a>, email: <a href="mailto:m.danilov@gmail.com">m.danilov@gmail.com</a>
+        </p>
+      </section>
     </details>
-    </div>
-    
-    <script src="data/monthWeekday.js"></script>
-    <script src="data/noBreakSpace.js"></script>
-    <script src="data/phoneCodeRu.js"></script>
-    <script src="data/yo.js"></script>
-    <script src="scripts/sboltypograph.js"></script>
-    
+  </div>
+
+  <script src="data/monthWeekday.js"></script>
+  <script src="data/noBreakSpace.js"></script>
+  <script src="data/phoneCodeRu.js"></script>
+  <script src="data/yo.js"></script>
+  <script src="scripts/sboltypograph.js"></script>
+
 </body>
 
 </html>
