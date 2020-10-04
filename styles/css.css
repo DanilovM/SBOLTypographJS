@@ -367,8 +367,12 @@ samp {
 
 .runTypographButton {}
 
-.highlightBlock {
+ins {
   background-color: plum;
+  text-decoration: none;
+}
+del {
+  display: none;
 }
 
 summary {
