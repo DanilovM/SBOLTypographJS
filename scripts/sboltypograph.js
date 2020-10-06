@@ -12,9 +12,9 @@
   var workPlaceInput = document.querySelector('.workPlace__input');
   var workPlaceOutput = document.querySelector('.workPlace__output');
   var hiddenOutput = document.querySelector('.hiddenOutput');
-  var clearInput = document.querySelector('.clearInput');
-  var clearOutput = document.querySelector('.clearOutput');
-  var arrowBack = document.querySelector('.arrowBack');
+  var clearInputButton = document.querySelector('.clearInput');
+  var clearOutputButton = document.querySelector('.clearOutput');
+  var arrowBackButton = document.querySelector('.arrowBack');
   var runTypographButton = document.querySelector('.runTypographButton');
   var copyTextButton = document.querySelector('.copyTextButton');
   var textInput = document.getElementById('textInput');
@@ -26,17 +26,17 @@
   var selectedNBSPtype;
   var selectedNBSPtypeDecode;
 
-  var masterText = '';
+  var masterOutputText = '';
   var _nbsp = '\u00A0';
 
-  clearOutput.addEventListener('click', clearOutputText);
+  clearOutputButton.addEventListener('click', clearOutputText);
 
   function decodeHTMLEntities(str) {
     return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;").replace(/\'/g, "&#39;").replace(/\//g, "&#x2F;");
   }
 
   function backLink() {
-    arrowBack.addEventListener('click', function() {
+    arrowBackButton.addEventListener('click', function() {
       workPlaceInput.style.display = "block";
       workPlaceOutput.style.display = "none";
       textInput.focus();
@@ -47,21 +47,20 @@
   function clearInputText() {
     textInput.value = '';
     textInput.focus();
-    changeButtonCondition();
+    changeButtonState();
   }
 
   function clearOutputText() {
     moveNbspTypeRadioBlock("input");
     textInput.value = '';
     textOutput.value = '';
-    arrowBack.click();
-    changeButtonCondition();
+    arrowBackButton.click();
+    changeButtonState();
     textInput.focus();
   }
 
 
   function copyText() {
-    copyTextButton.addEventListener('click', function() {
       hiddenOutput.select();
       document.execCommand("copy");
       workPlaceOutput.classList.add('highlight');
@@ -71,29 +70,25 @@
         copyTextButton.innerText = originalText;
         workPlaceOutput.classList.remove('highlight');
       }, 1000);
-
-
-    });
-
   }
 
-  function changeButtonCondition() {
+  function changeButtonState() {
     if (textInput.value.length != '') {
       runTypographButton.classList.remove('disabled');
       runTypographButton.addEventListener('click', callTypograph);
-      clearInput.classList.remove('disabled');
-      clearInput.addEventListener('click', clearInputText);
+      clearInputButton.classList.remove('disabled');
+      clearInputButton.addEventListener('click', clearInputText);
     } else {
       runTypographButton.classList.add('disabled');
       runTypographButton.removeEventListener('click', callTypograph);
-      clearInput.classList.add('disabled');
-      clearInput.removeEventListener('click', clearInputText);
+      clearInputButton.classList.add('disabled');
+      clearInputButton.removeEventListener('click', clearInputText);
     }
   }
 
   function textInputEventListener() {
     textInput.addEventListener('input', function() {
-      changeButtonCondition();
+      changeButtonState();
     });
   }
 
@@ -115,13 +110,13 @@
   function replaceNBSP() {
     var regexp = new RegExp(_nbsp, 'gm')
     // Не форматированный вид пробела. Это записываем в скрытый textarea для возможности копирования
-    outputString = masterText.replace(regexp, function(match, p1) {
+    outputString = masterOutputText.replace(regexp, function(match, p1) {
       return selectedNBSPtype;
     })
     // Форматированный вид пробела, для преобразования в HTML читаемый вид &nbsp; -> &amp;nbsp;
     // Это отображается на экране
     selectedNBSPtypeDecode = decodeHTMLEntities(selectedNBSPtype);
-    outputFormatString = masterText.replace(regexp, function(match, p1) {
+    outputFormatString = masterOutputText.replace(regexp, function(match, p1) {
       return selectedNBSPtypeDecode;
     })
   }
@@ -154,16 +149,19 @@
     moveNbspTypeRadioBlock("output");
     liveChangeNbspType();
     nbspType();
-    masterText = runTypograph(textInput.value);
+    masterOutputText = runTypograph(textInput.value);
     replaceNBSP();
     textOutput.innerHTML = outputFormatString;
+    // textOutput.innerHTML = diffString(textInput.value, outputString);
     hiddenOutput.value = outputString;
     workPlaceInput.style.display = "none";
     workPlaceOutput.style.display = "block";
     if (outputString == textInput.value) {
       copyTextButton.classList.add('disabled');
+      copyTextButton.removeEventListener('click', copyText);
     } else {
       copyTextButton.classList.remove('disabled');
+      copyTextButton.addEventListener('click', copyText);
     }
   }
 
@@ -202,14 +200,9 @@
   }
 
   dataFromFiles();
-  changeButtonCondition();
+  changeButtonState();
   textInputEventListener();
   backLink();
-  copyText();
-
-  function highlightBlock(text) {
-    return ('<span class=highlightBlock>' + text + '</span>');
-  }
 
   function runTypograph(stringToParse) {
     var workResult = "";
@@ -229,7 +222,7 @@
     var _counterOther = 0
 
     function cleanNBSP() {
-      stringToParse = stringToParse.replace(/(\&nbsp\;|\\u00A0)/gmi, function(match, p1) {
+      stringToParse = stringToParse.replace(/(\&nbsp\;|\\u00A0|\u00A0)/gmi, function(match, p1) {
         return ' ';
       })
     }
@@ -413,7 +406,6 @@
           return ''
         })
       }
-
     }
 
     function addNoBreakSpace() {
@@ -756,17 +748,17 @@
     }
 
     function numbers() {
-      // Если за числом идёт знак валюты или млн., трлн и т.д.
-      // Разбиваем по разрядам четырёх и более значную целую часть
+      // Если за числом идёт знак %, валюты или млн., трлн и т.д. разбиваем по разрядам только четырёх и более значную целую часть
       // Дробную часть не разбиваем
       // Заменяем точку на запятую
-      stringToParse = stringToParse.replace(/(\d+)(([.])(\d+))?((\u00A0(тыс|млн|млрд|трлн|₽|\$|€|£|¥))|%)/g, function(match, p1, p2, p3, p4, p5) {
+
+      stringToParse = stringToParse.replace(/(\d+)(([.,])(\d+))?((\u00A0(тыс|млн|млрд|трлн|₽|\$|€|£|¥))|%)/g, function(match, p1, p2, p3, p4, p5) {
         // p1 — целая часть
         // p2 – разделитель и дробная часть, если есть
         // p3 — разделитель
         // p4 — дробная часть
-        // p5 — валюта
-        console.log(p1 + " - " +p1.length);
+        // p5 — валюта или %
+
         var integerPart = p1
         if (p1.length >= 4 || p5 !== undefined) {
           integerPart = p1.replace(/(\d)(?=(\d{3})+([\D]|$))/g, function(match, a1) {
@@ -1078,7 +1070,7 @@
     punctuation();
     replaceQuoteMarks();
     deleteSpaces();
-    removeEndDotInSingleString();
+    // removeEndDotInSingleString();
     addNoBreakSpace();
     YO();
     phoneNumber();
