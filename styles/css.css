@@ -1,4 +1,4 @@
-/* @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400&family=Scada&display=swap'); */
+
 * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -7,7 +7,6 @@
 
 html {
   -webkit-font-smoothing: antialiased;
-  font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
@@ -45,7 +44,6 @@ h2 {
   font-weight: normal;
   font-size: 2rem;
   font-variant: small-caps;
-  margin: 0;
   color: #08A652;
   position: relative;
 }
@@ -259,17 +257,12 @@ samp {
 }
 
 .workPlace__input {
-  /* margin-right: 1rem; */
   background: #fff;
 }
 
 .workPlace__output.highlight {
   box-shadow: 0 0 20px 0 rgba(8, 166, 82, .5);
   background: rgba(8, 166, 82, .06);
-}
-
-.workPlace__output.highlight .textOutput {
-  /* filter: blur(2px); */
 }
 
 .hiddenOutput {
@@ -309,8 +302,6 @@ samp {
   margin: 0;
   font-family: "Courier New", monospace;
 }
-
-.workPlace__textarea.textOutput {}
 
 .button {
   border-radius: 0 0 .4rem .4rem;
@@ -365,10 +356,13 @@ samp {
   -webkit-filter: brightness(100%);
 }
 
-.runTypographButton {}
-
-.highlightBlock {
+ins {
   background-color: plum;
+  background-color: rgba(8, 166, 82, .3);
+  text-decoration: none;
+}
+del {
+  display: none;
 }
 
 summary {
