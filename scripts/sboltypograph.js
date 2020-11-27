@@ -540,7 +540,7 @@
       });
 
       // Неразрывный пробел ПОСЛЕ короткого слова
-      regexp = new RegExp('(^|[\\u0020\\u00A0«„\\"\\(\\[])([а-яё]{1,3})\\u0020', 'gmi')
+      regexp = new RegExp('(^|[\\u0020\\u00A0«„\\"\\(\\[])([А-ЯЁа-яё]{1,3})\\u0020', 'gim');
       stringToParse = stringToParse.replace(regexp, function (match, p1, p2) {
         _counterAddNoBreakSpace++;
         return p1 + p2 + _nbsp;
@@ -635,16 +635,16 @@
       // В конце функции dash() заменится обратно на -
       let specialDash = '';
 
-      let reFederal = new RegExp('[\\+\\(]*?' + spaceTmpl + '(8)' + spaceTmpl + '' + dashTmpl + '\\(?(800)' + spaceTmpl + '' + dashTmpl + '[\\)]?' + spaceDashTmpl + '(\\d)' + spaceDashTmpl + '(\\d)' + spaceDashTmpl + '(\\d)' + spaceDashTmpl + '(\\d)' + spaceDashTmpl + '(\\d)' + spaceDashTmpl + '(\\d)' + spaceDashTmpl + '(\\d)', 'gm');
-      stringToParse = stringToParse.replace(reFederal, function (match, p1, p2, p3, p4, p5, p6, p7, p8, p9) {
+      let reFederal = new RegExp('(' + spaceTmpl + ')[\\+\\(]*?' + spaceTmpl + '(8)' + spaceTmpl + '' + dashTmpl + '\\(?(800)' + spaceTmpl + '' + dashTmpl + '[\\)]?' + spaceDashTmpl + '(\\d)' + spaceDashTmpl + '(\\d)' + spaceDashTmpl + '(\\d)' + spaceDashTmpl + '(\\d)' + spaceDashTmpl + '(\\d)' + spaceDashTmpl + '(\\d)' + spaceDashTmpl + '(\\d)', 'gm');
+      stringToParse = stringToParse.replace(reFederal, function (match, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10) {
         specialDash = '\u002D';
-        phoneNumber = p1 + _nbsp + '(' + p2 + ')' + _nbsp + p3 + p4 + p5 + specialDash + p6 + p7 + specialDash + p8 + p9;
+        phoneNumber = p1 + p2 + _nbsp + '(' + p3 + ')' + _nbsp + p4 + p5 + p6 + specialDash + p7 + p8 + specialDash + p9 + p10;
         if (match != phoneNumber) {
           _counterPhoneNumber++;
         }
         // Заменяем - на спецсимвол
         specialDash = '<phoneDash>';
-        phoneNumber = p1 + _nbsp + '(' + p2 + ')' + _nbsp + p3 + p4 + p5 + specialDash + p6 + p7 + specialDash + p8 + p9;
+        phoneNumber = p1 + p2 + _nbsp + '(' + p3 + ')' + _nbsp + p4 + p5 + p6 + specialDash + p7 + p8 + specialDash + p9 + p10;
 
         return phoneNumber;
       });
@@ -653,15 +653,15 @@
       // +7 вместо 8
       // Если трёхзначный код города, формат номера +7 (111) 111-11-11
       // Если четырёхзначный код города, формат номера +7 (1111) 11-11-11
-      let reRu = new RegExp('[\\+\\(]*?' + spaceTmpl + '(7|8)' + spaceTmpl + '' + dashTmpl + '\\(?(' + _phoneCodeRu + ')' + spaceTmpl + '' + dashTmpl + '[\\)]?' + spaceDashTmpl + '(\\d)' + spaceDashTmpl + '(\\d)' + spaceDashTmpl + '(\\d)' + spaceDashTmpl + '(\\d)' + spaceDashTmpl + '(\\d)' + spaceDashTmpl + '(\\d)?' + spaceDashTmpl + '(\\d)?', 'gm');
+      let reRu = new RegExp('(' + spaceTmpl + ')[\\+\\(]*?' + spaceTmpl + '(7|8)' + spaceTmpl + '' + dashTmpl + '\\(?(' + _phoneCodeRu + ')' + spaceTmpl + '' + dashTmpl + '[\\)]?' + spaceDashTmpl + '(\\d)' + spaceDashTmpl + '(\\d)' + spaceDashTmpl + '(\\d)' + spaceDashTmpl + '(\\d)' + spaceDashTmpl + '(\\d)' + spaceDashTmpl + '(\\d)?' + spaceDashTmpl + '(\\d)?', 'gm');
 
-      stringToParse = stringToParse.replace(reRu, function (match, p1, p2, p3, p4, p5, p6, p7, p8, p9) {
-        p1 = '7';
+      stringToParse = stringToParse.replace(reRu, function (match, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10) {
+        p2 = '7';
         specialDash = '\u002D';
-        if (p2.length == 3) {
-          phoneNumber = '+' + p1 + _nbsp + '(' + p2 + ')' + _nbsp + p3 + p4 + p5 + specialDash + p6 + p7 + specialDash + p8 + p9;
-        } else if (p2.length == 4) {
-          phoneNumber = '+' + p1 + _nbsp + '(' + p2 + ')' + _nbsp + p3 + p4 + specialDash + p5 + p6 + specialDash + p7 + p8;
+        if (p3.length == 3) {
+          phoneNumber = p1 + '+' + p2 + _nbsp + '(' + p3 + ')' + _nbsp + p4 + p5 + p6 + specialDash + p7 + p8 + specialDash + p9 + p10;
+        } else if (p3.length == 4) {
+          phoneNumber = p1 + '+' + p2 + _nbsp + '(' + p3 + ')' + _nbsp + p4 + p5 + specialDash + p6 + p7 + specialDash + p8 + p9;
         }
         if (match != phoneNumber) {
           _counterPhoneNumber++;
@@ -669,10 +669,10 @@
 
         // Заменяем - на спецсимвол
         specialDash = '<phoneDash>';
-        if (p2.length == 3) {
-          phoneNumber = '+' + p1 + _nbsp + '(' + p2 + ')' + _nbsp + p3 + p4 + p5 + specialDash + p6 + p7 + specialDash + p8 + p9;
-        } else if (p2.length == 4) {
-          phoneNumber = '+' + p1 + _nbsp + '(' + p2 + ')' + _nbsp + p3 + p4 + specialDash + p5 + p6 + specialDash + p7 + p8;
+        if (p3.length == 3) {
+          phoneNumber = p1 +'+' + p2 + _nbsp + '(' + p3 + ')' + _nbsp + p4 + p5 + p6 + specialDash + p7 + p8 + specialDash + p9 + p10;
+        } else if (p3.length == 4) {
+          phoneNumber = p1 + '+' + p2 + _nbsp + '(' + p3 + ')' + _nbsp + p4 + p5 + specialDash + p6 + p7 + specialDash + p8 + p9;
         }
         return phoneNumber;
 
@@ -826,7 +826,7 @@
           });
         }
 
-        let fractionalPart
+        let fractionalPart;
         if (p2 === undefined) {
           fractionalPart = '';
         } else {
@@ -851,7 +851,7 @@
           year = '.' + p6;
         }
         return p1 + p2 + '.' + p3 + year + p7;
-      })
+      });
 
       // Если это индекс, возвращаем как было, 6 цифр слитно, за ними запятая с пробелом
       stringToParse = stringToParse.replace(/(^|\D)(\d{3})\u00A0(\d{3})(\,\u0020)/gm, function (match, p1, p2, p3, p4) {
@@ -953,6 +953,14 @@
     }
 
     function misc() {
+      // СберБанк Онлайн
+      // stringToParse = stringToParse.replace(/(Сбербанк|Сбер[\u0020\u00A0]банк)/gmi, function (match, p1) {
+      //   if (match != 'СберБанк') {
+      //     _counterOther++
+      //   }
+      //   return 'СберБанк'
+      // })
+
       // Mastercard
       stringToParse = stringToParse.replace(/(Master[\u0020\u00A0]Card|MasterCard)/gmi, function (match, p1) {
         if (match != 'Mastercard') {
@@ -974,7 +982,7 @@
       });
 
       // Google Pay
-      stringToParse = stringToParse.replace(/(Google[\u0020\u00A0]pay|Гугл[\u0020\u00A0]Пэй)/gmi, function (match, p1) {
+      stringToParse = stringToParse.replace(/(Googlepay|Google[\u0020\u00A0]pay|Гугл[\u0020\u00A0]Пэй)/gmi, function (match, p1) {
         if (match != 'Google\u00A0Pay') {
           _counterOther++;
         }
@@ -982,7 +990,7 @@
       });
 
       // Apple Pay
-      stringToParse = stringToParse.replace(/(Apple[\u0020\u00A0]pay|Эпл[\u0020\u00A0]Пэй)/gmi, function (match, p1) {
+      stringToParse = stringToParse.replace(/(Applepay|Apple[\u0020\u00A0]pay|Эпл[\u0020\u00A0]Пэй)/gmi, function (match, p1) {
         if (match != 'Apple\u00A0Pay') {
           _counterOther++;
         }
@@ -1094,7 +1102,7 @@
       });
 
       // офлайн
-      stringToParse = stringToParse.replace(/(((^|\n|[\.\!\?\…][\u0020\u00A0])(\u2014[\u0020\u00A0])?)|((^|\n|[\.\!\?\…][\u0020\u00A0]?)\u00AB))?(оффлайн|офлайн|офф-лайн|оф-лайн)/gmi, function (match, p1, p2, p3, p4) {
+      stringToParse = stringToParse.replace(/(((^|\n|[\.\!\?\…][\u0020\u00A0])(\u2014[\u0020\u00A0])?)|((^|\n|[\.\!\?\…][\u0020\u00A0]?)\u00AB))?(оффлайн|офлайн|офф-лайн|оф-лайн)/gmi, function (match, p1, p2, p3, p4, p5, p6, p7) {
         let offline;
         if (p1 !== undefined) {
           offline = 'Офлайн';
@@ -1102,14 +1110,14 @@
           offline = 'офлайн';
           p1 = '';
         }
-        if (p4 != offline) {
+        if (p7 != offline) {
           _counterOther++;
         }
         return p1 + offline;
       });
 
       // онлайн
-      stringToParse = stringToParse.replace(/(((^|\n|[\.\!\?\…][\u0020\u00A0])(\u2014[\u0020\u00A0])?)|((^|\n|[\.\!\?\…][\u0020\u00A0]?)\u00AB))?(оннлайн|онлайн|онн-лайн|он-лайн)/gmi, function (match, p1, p2, p3, p4) {
+      stringToParse = stringToParse.replace(/(((^|\n|[\.\!\?\…][\u0020\u00A0])(\u2014[\u0020\u00A0])?)|((^|\n|[\.\!\?\…][\u0020\u00A0]?)\u00AB)|(Сбербанк)[\u0020\u00A0])?(оннлайн|онлайн|онн-лайн|он-лайн|Онлайн)/gmi, function (match, p1, p2, p3, p4, p5, p6, p7, p8) {
         let online;
         if (p1 !== undefined) {
           online = 'Онлайн';
@@ -1117,7 +1125,8 @@
           online = 'онлайн';
           p1 = '';
         }
-        if (p4 != online) {
+
+        if (p8 != online) {
           _counterOther++;
         }
         return p1 + online;
