@@ -1207,8 +1207,6 @@
     return stringToParse;
   }
 
-
-
 })();
 
 
