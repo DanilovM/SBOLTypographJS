@@ -1,4 +1,4 @@
-# ![alt text](https://raw.githubusercontent.com/DanilovM/SBOLTypographJS/master/img/favicon.png) SBOL Typograph JS
+# ![alt text](https://raw.githubusercontent.com/DanilovM/SBOLTypographJS/master/img/SBOLTypograph_icon.svg) SBOL Typograph JS
 
 JavaScript типограф для исправления и форматирования текста на основе правил типографики со встроенным Ёфикатором.
 
