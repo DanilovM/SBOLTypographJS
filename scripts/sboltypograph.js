@@ -439,34 +439,28 @@
         return p1 + p2;
       });
 
-      // Удаляем пробелы в начале и конце строки
+      // Удаляем пробелы между т. п. и т. д.
+      stringToParse = stringToParse.replace(/((\u0020|\u00A0)(т\.))\s+((д\.)|(п\.))/gm, function (match, p1, p2, p3, p4) {
+        _counterDeleteSpaces++;
+        return p1 + p4;
+      });
+
       // Если в строке только пробельные символы, ничего не меняем
       if (stringToParse.search(/[^\s]/gm) != -1) {
+        // Иначе удаляем пробелы в начале и конце строки
         stringToParse = stringToParse.trim();
-      }
-
-      // Удаляем двойные пробелы
-      stringToParse = stringToParse.replace(/(\u0020|\u00A0){2,}/gm, function () {
-        _counterDeleteSpaces++;
-        return " ";
-      });
-    }
-
-    function removeEndDotInSingleString() {
-      // Удаляем точку в конце одиночного предложения
-      // Ищем . ! ? за ней пробел или перевод строки
-      // Если найдено <=1, значит это одиночное предложение и удаляем точку в конце
-      let searchString = stringToParse.search(/[\.|\!|\?][\s|$]/gm)
-      if (searchString <= 1) {
-        stringToParse = stringToParse.replace(/\.$/g, function () {
-          _counterRemoveEndDotInSingleString++;
-          return '';
+        // Удаляем двойные пробелы
+        stringToParse = stringToParse.replace(/(\u0020|\u00A0){2,}/gm, function () {
+          _counterDeleteSpaces++;
+          return " ";
         });
       }
     }
 
     function addNoBreakSpace() {
       let regexp;
+      let regexpBefore;
+      let regexpAfter;
       // Неразрывный пробел между инициалами и фамилией
       // Инициалы слитно, неразрывный пробел, фамилия
       regexp = new RegExp('(^|[\\u0020«„\\"\\(\\[])([А-ЯЁ]\\.)\u0020?([А-ЯЁ]\\.)?\u0020?([А-ЯЁ][а-яё]+)([\\s.,;:?!\\"»“‘\\)\\]]|$)', 'gm');
@@ -741,32 +735,51 @@
       monthWeekday(_dataWeekdayShort);
 
       // Внутри текста используем неразрывный пробел + длинное тире
-      re = new RegExp('([^\\.\\!\\?\\dXIV])([\\u0020\\u00A0])(' + dashAll + ')([\\u0020\\u00A0])?([^\\dXIV])', 'gm');
-      stringToParse = stringToParse.replace(re, function (match, p1, p2, p3, p4, p5) {
-        if (p2 == '\u0020') {
-          p2 = _nbsp;
-          _counterAddNoBreakSpace++;
-        }
-        if (p3 != '\u2014') {
-          p3 = '\u2014';
-          _counterDash++;
-        }
-        if (p4 != '\u20A0') {
-          p4 = '\u0020';
-        }
-        return p1 + p2 + p3 + p4 + p5;
-      });
+      // Что обрабатываем: различные сочетания буква - буква, буква - цифра, цифра - буква, цифра - цифра
 
-      // Для диапазонов чисел используем короткое (среднее) тире «–» без пробелов: 2002–2009 + века XI–XII
-      re = new RegExp('(\\d|[XIV])([\\u0020\\u00A0])?(' + dashAll + ')([\\u0020\\u00A0])?(\\d|[XIV])', 'gm');
-      stringToParse = stringToParse.replace(re, function (match, p1, p2, p3, p4, p5) {
-        if (p3 != '\u2013') {
-          p3 = '\u2013';
-          _counterDash++;
+      // Ищем: ((букву) или (цифру или латинскую цифру)) - (возможный пробел) - (дефис) - (возможный пробел) - ((букву) или (цифру или латинскую цифру))
+      re = new RegExp('(([А-ЯЁа-яё])|([\\dIVXLCDMZ]))([\\u0020\\u00A0])?(' + dashAll + ')([\\u0020\\u00A0])?(([А-ЯЁа-яё])|([\\dIVXLCDMZ]))', 'gm');
+      stringToParse = stringToParse.replace(re, function (match, p1, p2, p3, p4, p5, p6, p7, p8, p9) {
+        
+        // Если цифра - цифра
+        // Для диапазонов чисел используем короткое (среднее) тире «–» без пробелов: 2002–2009 + века XI–XII
+        if (p3 !== undefined && p9 !== undefined) {
+          if (p5 != '\u2013') {
+            p5 = '\u2013';
+            _counterDash++;
+          }
+          return p1  + p5  + p7;
         }
-        p2 = p4 = '';
-        return p1 + p2 + p3 + p4 + p5;
-      })
+
+        // Если слева или справа от дефиса буква
+        if (p2 !== undefined || p8 !== undefined) {
+
+          // Если вокруг дефиса нет пробелов
+          if (p4 === undefined && p6 === undefined) {
+            if (p5 != '\u002D') {
+              p5 = '\u002D';
+              _counterDash++;
+            }
+            return p1 + p5 + p7;
+          }
+          
+          // Если вокруг дефиса хотя бы один пробел
+          if (p4 !== undefined || p6 !== undefined) {
+            if (p5 != '\u2014') {
+              p5 = '\u2014';
+              _counterDash++;
+            }
+            if (p4 != _nbsp) {
+              p4 = _nbsp;
+              _counterAddNoBreakSpace++;
+            }
+            p6 = "\u0020";
+            return p1 + p4 + p5 + p6 + p7;
+          }
+
+        }
+        
+      });
 
       // Заменяем <phoneDash> из функции phoneNumber() на короткое тире
       stringToParse = stringToParse.replace(/<phoneDash>/gm, function (match, p1) {
@@ -1116,11 +1129,31 @@
       });
     }
 
+    function removeEndDotInSingleString() {
+      // Удаляем точку в конце одиночного предложения
+      // Ищем . ! ? ; за ней пробел или перевод строки
+      // Если найдено <=1, значит это одиночное предложение и удаляем точку в конце
+  
+      // Что бы избежать удаления точки в т.д., т.п., др. стоящих в конце одиночного предложения, оборачиваем их в маркеры
+      stringToParse = stringToParse.replace(/((\u0020|\u00A0)((т\.д\.)|(т\.п\.)|(др\.)))/gm, function (match, p1, p2, p3, p4) {
+        return '<noReplace>' + p1 + '<noReplace>';
+      });
+  
+      let searchString = stringToParse.search(/[\.|\!|\?|\;][\s|$]/gm);
+      if (searchString <= 1) {
+        stringToParse = stringToParse.replace(/\.$/g, function () {
+          _counterRemoveEndDotInSingleString++;
+          return '';
+        });
+      }
+  
+      // Удаляем маркер
+      stringToParse = stringToParse.replace(/<noReplace>/g, "");
+    }
 
     punctuation();
     replaceQuoteMarks();
     deleteSpaces();
-    // removeEndDotInSingleString();
     addNoBreakSpace();
     YO();
     phoneNumber();
@@ -1129,6 +1162,7 @@
     numbers();
     lowerCase();
     misc();
+    // removeEndDotInSingleString();
 
     if (_counterPunctuation > 0) {
       workResult = workResult + "Знаков пунктуации исправлено: " + _counterPunctuation + "\n";
