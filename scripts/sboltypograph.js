@@ -616,7 +616,7 @@
 
     function phoneNumber() {
       // Федеральный номер 8 800
-      // Формат номера 8 (800) 555-55-50
+      // Формат номера 8 800 555-55-50
       // [\+\(]?\u0020?(8)[\u0020]?[-]?[\(]?(800)[\u0020]?[-]?[\)]?[\u0020-]?(\d)[\u0020-]?(\d)[\u0020-]?(\d)[\u0020-]?(\d)[\u0020-]?(\d)[\u0020-]?(\d)[\u0020-]?(\d)
       // Пробел или неразрывный пробел
       let spaceTmpl = '[\\u0020\\u00A0]?';
@@ -632,13 +632,15 @@
       let reFederal = new RegExp('(' + spaceTmpl + ')[\\+\\(]*?' + spaceTmpl + '(8)' + spaceTmpl + '' + dashTmpl + '\\(?(800)' + spaceTmpl + '' + dashTmpl + '[\\)]?' + spaceDashTmpl + '(\\d)' + spaceDashTmpl + '(\\d)' + spaceDashTmpl + '(\\d)' + spaceDashTmpl + '(\\d)' + spaceDashTmpl + '(\\d)' + spaceDashTmpl + '(\\d)' + spaceDashTmpl + '(\\d)', 'gm');
       stringToParse = stringToParse.replace(reFederal, function (match, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10) {
         specialDash = '\u002D';
-        phoneNumber = p1 + p2 + _nbsp + '(' + p3 + ')' + _nbsp + p4 + p5 + p6 + specialDash + p7 + p8 + specialDash + p9 + p10;
+        // phoneNumber = p1 + p2 + _nbsp + '(' + p3 + ')' + _nbsp + p4 + p5 + p6 + specialDash + p7 + p8 + specialDash + p9 + p10;
+        phoneNumber = p1 + p2 + _nbsp + p3 + _nbsp + p4 + p5 + p6 + specialDash + p7 + p8 + specialDash + p9 + p10;
         if (match != phoneNumber) {
           _counterPhoneNumber++;
         }
         // Заменяем - на спецсимвол
         specialDash = '<phoneDash>';
-        phoneNumber = p1 + p2 + _nbsp + '(' + p3 + ')' + _nbsp + p4 + p5 + p6 + specialDash + p7 + p8 + specialDash + p9 + p10;
+        // phoneNumber = p1 + p2 + _nbsp + '(' + p3 + ')' + _nbsp + p4 + p5 + p6 + specialDash + p7 + p8 + specialDash + p9 + p10;
+        phoneNumber = p1 + p2 + _nbsp + p3 + _nbsp + p4 + p5 + p6 + specialDash + p7 + p8 + specialDash + p9 + p10;
 
         return phoneNumber;
       });
@@ -653,9 +655,11 @@
         p2 = '7';
         specialDash = '\u002D';
         if (p3.length == 3) {
-          phoneNumber = p1 + '+' + p2 + _nbsp + '(' + p3 + ')' + _nbsp + p4 + p5 + p6 + specialDash + p7 + p8 + specialDash + p9 + p10;
+          // phoneNumber = p1 + '+' + p2 + _nbsp + '(' + p3 + ')' + _nbsp + p4 + p5 + p6 + specialDash + p7 + p8 + specialDash + p9 + p10;   
+          phoneNumber = p1 + '+' + p2 + _nbsp + p3 + _nbsp + p4 + p5 + p6 + specialDash + p7 + p8 + specialDash + p9 + p10;   
         } else if (p3.length == 4) {
-          phoneNumber = p1 + '+' + p2 + _nbsp + '(' + p3 + ')' + _nbsp + p4 + p5 + specialDash + p6 + p7 + specialDash + p8 + p9;
+          // phoneNumber = p1 + '+' + p2 + _nbsp + '(' + p3 + ')' + _nbsp + p4 + p5 + specialDash + p6 + p7 + specialDash + p8 + p9;
+          phoneNumber = p1 + '+' + p2 + _nbsp + p3 + _nbsp + p4 + p5 + specialDash + p6 + p7 + specialDash + p8 + p9;
         }
         if (match != phoneNumber) {
           _counterPhoneNumber++;
@@ -664,9 +668,11 @@
         // Заменяем - на спецсимвол
         specialDash = '<phoneDash>';
         if (p3.length == 3) {
-          phoneNumber = p1 +'+' + p2 + _nbsp + '(' + p3 + ')' + _nbsp + p4 + p5 + p6 + specialDash + p7 + p8 + specialDash + p9 + p10;
+          // phoneNumber = p1 +'+' + p2 + _nbsp + '(' + p3 + ')' + _nbsp + p4 + p5 + p6 + specialDash + p7 + p8 + specialDash + p9 + p10;
+          phoneNumber = p1 +'+' + p2 + _nbsp + p3 + _nbsp + p4 + p5 + p6 + specialDash + p7 + p8 + specialDash + p9 + p10;
         } else if (p3.length == 4) {
-          phoneNumber = p1 + '+' + p2 + _nbsp + '(' + p3 + ')' + _nbsp + p4 + p5 + specialDash + p6 + p7 + specialDash + p8 + p9;
+          // phoneNumber = p1 + '+' + p2 + _nbsp + '(' + p3 + ')' + _nbsp + p4 + p5 + specialDash + p6 + p7 + specialDash + p8 + p9;
+          phoneNumber = p1 + '+' + p2 + _nbsp + p3 + _nbsp + p4 + p5 + specialDash + p6 + p7 + specialDash + p8 + p9;
         }
         return phoneNumber;
 
@@ -946,191 +952,268 @@
     }
 
     function misc() {
-      // СберБанк Онлайн
-      // stringToParse = stringToParse.replace(/(Сбербанк|Сбер[\u0020\u00A0]банк)/gmi, function (match, p1) {
-      //   if (match != 'СберБанк') {
-      //     _counterOther++
-      //   }
-      //   return 'СберБанк'
-      // })
-
+        // СберБанк
+        stringToParse = stringToParse.replace(/(Сбербанк|Сбер[\u0020\u00A0]банк)/gmi, function (match, p1) {
+          if (match != 'СберБанк') {
+              _counterOther++;
+          }
+          return 'СберБанк';
+      });
+      // Домклик
+      stringToParse = stringToParse.replace(/(DomClick|ДомКлик|Дом[\u0020\u00A0]Клик)/gmi, function (match, p1) {
+          if (match != 'Домклик') {
+              _counterOther++;
+          }
+          return 'Домклик';
+      });
+      // СберЗдоровье
+      stringToParse = stringToParse.replace(/(Сберздоровье|Docdoc|ДокДок|Сбер[\u0020\u00A0]Здоровье)/gmi, function (match, p1) {
+          if (match != 'СберЗдоровье') {
+              _counterOther++;
+          }
+          return 'СберЗдоровье';
+      });
+      // СберМаркет
+      stringToParse = stringToParse.replace(/(Сбермаркет|Сбер[\u0020\u00A0]Маркет)/gmi, function (match, p1) {
+          if (match != 'СберМаркет') {
+              _counterOther++;
+          }
+          return 'СберМаркет';
+      });
+      // СберЛогистика
+      stringToParse = stringToParse.replace(/(Сберлогистика|Сбер[\u0020\u00A0]Логистика)/gmi, function (match, p1) {
+          if (match != 'СберЛогистика') {
+              _counterOther++;
+          }
+          return 'СберЛогистика';
+      });
+      // СберФуд
+      stringToParse = stringToParse.replace(/(Сберфуд|Сбер[\u0020\u00A0]Фуд)/gmi, function (match, p1) {
+          if (match != 'СберФуд') {
+              _counterOther++;
+          }
+          return 'СберФуд';
+      });
+      // СберПрайм
+      stringToParse = stringToParse.replace(/(Сберпрайм|Сбер[\u0020\u00A0]Прайм)/gmi, function (match, p1) {
+          if (match != 'СберПрайм') {
+              _counterOther++;
+          }
+          return 'СберПрайм';
+      });
+      // СберМобайл
+      stringToParse = stringToParse.replace(/(Сбермобайл|Сбер[\u0020\u00A0]Мобайл)/gmi, function (match, p1) {
+          if (match != 'СберМобайл') {
+              _counterOther++;
+          }
+          return 'СберМобайл';
+      });
+      // СберЗвук
+      stringToParse = stringToParse.replace(/(Сберзвук|Сбер[\u0020\u00A0]Звук)/gmi, function (match, p1) {
+          if (match != 'СберЗвук') {
+              _counterOther++;
+          }
+          return 'СберЗвук';
+      });
+      // СберАвто
+      stringToParse = stringToParse.replace(/(Сберавто|Сбер[\u0020\u00A0]Авто)/gmi, function (match, p1) {
+          if (match != 'СберАвто') {
+              _counterOther++;
+          }
+          return 'СберАвто';
+      });
+      // Сбер ID
+      stringToParse = stringToParse.replace(/(СберАйди|СберID|Сбер[\u0020\u00A0]Айди)/gmi, function (match, p1) {
+          if (match != 'Сбер\u00A0ID') {
+              _counterOther++;
+          }
+          return 'Сбер\u00A0ID';
+      });
+      // SberPay
+      stringToParse = stringToParse.replace(/(Sberpay|СберПэй|Sber[\u0020\u00A0]Pay|Сбер[\u0020\u00A0]Пэй)/gmi, function (match, p1) {
+          if (match != 'SberPay') {
+              _counterOther++;
+          }
+          return 'SberPay';
+      });
       // Mastercard
       stringToParse = stringToParse.replace(/(Master[\u0020\u00A0]Card|MasterCard)/gmi, function (match, p1) {
-        if (match != 'Mastercard') {
-          _counterOther++;
-        }
-        return 'Mastercard';
+          if (match != 'Mastercard') {
+              _counterOther++;
+          }
+          return 'Mastercard';
       });
-
       // Visa
       stringToParse = stringToParse.replace(/(VISA)/gm, function (match, p1) {
-        _counterOther++;
-        return 'Visa';
+          _counterOther++;
+          return 'Visa';
       });
-
       // Мир
       stringToParse = stringToParse.replace(/(МИР)/gm, function (match, p1) {
-        _counterOther++;
-        return 'Мир';
+          _counterOther++;
+          return 'Мир';
       });
-
       // Google Pay
       stringToParse = stringToParse.replace(/(Googlepay|Google[\u0020\u00A0]pay|Гугл[\u0020\u00A0]Пэй)/gmi, function (match, p1) {
-        if (match != 'Google\u00A0Pay') {
-          _counterOther++;
-        }
-        return 'Google\u00A0Pay';
+          if (match != 'Google\u00A0Pay') {
+              _counterOther++;
+          }
+          return 'Google\u00A0Pay';
       });
-
       // Apple Pay
       stringToParse = stringToParse.replace(/(Applepay|Apple[\u0020\u00A0]pay|Эпл[\u0020\u00A0]Пэй)/gmi, function (match, p1) {
-        if (match != 'Apple\u00A0Pay') {
-          _counterOther++;
-        }
-        return 'Apple\u00A0Pay';
+          if (match != 'Apple\u00A0Pay') {
+              _counterOther++;
+          }
+          return 'Apple\u00A0Pay';
       });
-
-      // Push-уведомления
-      stringToParse = stringToParse.replace(/(push|пуш)([\u0020\u00A0\u002D\u2012\u2013\u2014])(уведомлен)([ие|ия|ий|ию|иям|ием|иями|ии|иях])/gmi, function (match, p1, p2, p3, p4) {
-        if ((p1 + p2 + p3) != 'Push-уведомлен') {
-          _counterOther++;
-        }
-        return 'Push-' + p3.toLowerCase() + p4.toLowerCase();
+      // пуш-уведомление
+      stringToParse = stringToParse.replace(/((^|\n|[\.\!\?\…][\u0020\u00A0])(\u2014[\u0020\u00A0])?)?(push|пуш)([\u0020\u00A0\u002D\u2012\u2013\u2014])(уведомлен)([ие|ия|ий|ию|иям|ием|иями|ии|иях])?/gmi, function (match, p1, p2, p3, p4, p5, p6, p7) {
+          let sim;
+          if (p1 !== undefined) {
+              sim = 'Пуш-уведомлен';
+          }
+          else {
+              sim = 'пуш-уведомлен';
+              p1 = '';
+          }
+          if ((p4 + p5 + p6) != sim) {
+              _counterOther++;
+          }
+          if (p7 === undefined) {
+              p7 = '';
+          }
+          return p1 + sim + p7.toLowerCase();
       });
-
       // ПИН-код
       stringToParse = stringToParse.replace(/(pin|пин)([\u0020\u00A0\u002D\u2012\u2013\u2014])(код)([ы|а|ов|у|ам|ы|ом|ами|е|ах])?/gmi, function (match, p1, p2, p3, p4) {
-        if ((p1 + p2 + p3) != 'ПИН-код') {
-          _counterOther++;
-        }
-        if (p4 === undefined) {
-          p4 = '';
-        }
-        return 'ПИН-' + p3.toLowerCase() + p4.toLowerCase();
+          if ((p1 + p2 + p3) != 'ПИН-код') {
+              _counterOther++;
+          }
+          if (p4 === undefined) {
+              p4 = '';
+          }
+          return 'ПИН-' + p3.toLowerCase() + p4.toLowerCase();
       });
-
       // QR-код
       stringToParse = stringToParse.replace(/(QR)([\u0020\u00A0\u002D\u2012\u2013\u2014])(code|код)([ы|а|ов|у|ам|ы|ом|ами|е|ах])?/gmi, function (match, p1, p2, p3, p4) {
-        if ((p1 + p2 + p3) != 'QR-код') {
-          _counterOther++;
-        }
-        if (p4 === undefined) {
-          p4 = '';
-        }
-        return 'QR-' + p3.toLowerCase() + p4.toLowerCase();
+          if ((p1 + p2 + p3) != 'QR-код') {
+              _counterOther++;
+          }
+          if (p4 === undefined) {
+              p4 = '';
+          }
+          return 'QR-' + p3.toLowerCase() + p4.toLowerCase();
       });
-
       // сим-карта
       stringToParse = stringToParse.replace(/((^|\n|[\.\!\?\…][\u0020\u00A0])(\u2014[\u0020\u00A0])?)?(sim|сим)([\u0020\u00A0\u002D\u2012\u2013\u2014])(карт)([а|ы|е|ам|у|ы|ой|ами|ах])?/gmi, function (match, p1, p2, p3, p4, p5, p6, p7) {
-        let sim;
-        if (p1 !== undefined) {
-          sim = 'Сим-карт';
-        } else {
-          sim = 'сим-карт';
-          p1 = '';
-        }
-        if ((p4 + p5 + p6) != sim) {
-          _counterOther++;
-        }
-        if (p7 === undefined) {
-          p7 = '';
-        }
-        return p1 + sim + p7.toLowerCase();
+          let sim;
+          if (p1 !== undefined) {
+              sim = 'Сим-карт';
+          }
+          else {
+              sim = 'сим-карт';
+              p1 = '';
+          }
+          if ((p4 + p5 + p6) != sim) {
+              _counterOther++;
+          }
+          if (p7 === undefined) {
+              p7 = '';
+          }
+          return p1 + sim + p7.toLowerCase();
       });
-
       // СVV-код, СVС-код, СVV2-код, СVС2-код, CVV, CVC
       stringToParse = stringToParse.replace(/(cvv|cvc|cvv2|cvc2)([\u0020\u00A0\u002D\u2012\u2013\u2014])?(код)?([ы|а|ов|у|ам|ы|ом|ами|е|ах])?/gmi, function (match, p1, p2, p3, p4) {
-        if (p2 === undefined && p3 === undefined) {
-          if (p1 != 'CVV' && p1 != 'CVC' && p1 != 'CVV2' && p1 != 'CVC2') {
-            _counterOther++;
+          if (p2 === undefined && p3 === undefined) {
+              if (p1 != 'CVV' && p1 != 'CVC' && p1 != 'CVV2' && p1 != 'CVC2') {
+                  _counterOther++;
+              }
           }
-        } else {
-          if ((p1 != 'CVV' && p1 != 'CVC' && p1 != 'CVC2') || ((p2 + p3) != '-код')) {
-            _counterOther++;
+          else {
+              if ((p1 != 'CVV' && p1 != 'CVC' && p1 != 'CVC2') || ((p2 + p3) != '-код')) {
+                  _counterOther++;
+              }
           }
-        }
-        if (p2 === undefined) {
-          p2 = '';
-        } else {
-          p2 = '-';
-        }
-        if (p3 === undefined) {
-          p3 = '';
-        }
-        if (p4 === undefined) {
-          p4 = '';
-        }
-        return p1.toUpperCase() + p2 + p3.toLowerCase() + p4.toLowerCase();
+          if (p2 === undefined) {
+              p2 = '';
+          }
+          else {
+              p2 = '-';
+          }
+          if (p3 === undefined) {
+              p3 = '';
+          }
+          if (p4 === undefined) {
+              p4 = '';
+          }
+          return p1.toUpperCase() + p2 + p3.toLowerCase() + p4.toLowerCase();
       });
-
       // СМС
       stringToParse = stringToParse.replace(/(sms|смс)/gmi, function (match, p1) {
-        if (match != 'СМС') {
-          _counterOther++;
-        }
-        return 'СМС';
+          if (match != 'СМС') {
+              _counterOther++;
+          }
+          return 'СМС';
       });
-
       // Wi-Fi
       stringToParse = stringToParse.replace(/(wifi|wi-fi)/gmi, function (match, p1) {
-        if (match != 'Wi-Fi') {
-          _counterOther++;
-        }
-        return 'Wi-Fi';
+          if (match != 'Wi-Fi') {
+              _counterOther++;
+          }
+          return 'Wi-Fi';
       });
-
       // email
       stringToParse = stringToParse.replace(/((^|\n|[\.\!\?\…][\u0020\u00A0])(\u2014[\u0020\u00A0])?)?(e-mail|email|имейл|емейл)/gmi, function (match, p1, p2, p3, p4) {
-        let email;
-        if (p1 !== undefined) {
-          email = 'Email';
-        } else {
-          email = 'email';
-          p1 = '';
-        }
-        if (p4 != email) {
-          _counterOther++;
-        }
-        return p1 + email;
+          let email;
+          if (p1 !== undefined) {
+              email = 'Email';
+          }
+          else {
+              email = 'email';
+              p1 = '';
+          }
+          if (p4 != email) {
+              _counterOther++;
+          }
+          return p1 + email;
       });
-
       // офлайн
       stringToParse = stringToParse.replace(/(((^|\n|[\.\!\?\…][\u0020\u00A0])(\u2014[\u0020\u00A0])?)|((^|\n|[\.\!\?\…][\u0020\u00A0]?)\u00AB))?(оффлайн|офлайн|офф-лайн|оф-лайн)/gmi, function (match, p1, p2, p3, p4, p5, p6, p7) {
-        let offline;
-        if (p1 !== undefined) {
-          offline = 'Офлайн';
-        } else {
-          offline = 'офлайн';
-          p1 = '';
-        }
-        if (p7 != offline) {
-          _counterOther++;
-        }
-        return p1 + offline;
+          let offline;
+          if (p1 !== undefined) {
+              offline = 'Офлайн';
+          }
+          else {
+              offline = 'офлайн';
+              p1 = '';
+          }
+          if (p7 != offline) {
+              _counterOther++;
+          }
+          return p1 + offline;
       });
-
       // онлайн
       stringToParse = stringToParse.replace(/(((^|\n|[\.\!\?\…][\u0020\u00A0])(\u2014[\u0020\u00A0])?)|((^|\n|[\.\!\?\…][\u0020\u00A0]?)\u00AB)|(Сбербанк)[\u0020\u00A0])?(оннлайн|онлайн|онн-лайн|он-лайн|Онлайн)/gmi, function (match, p1, p2, p3, p4, p5, p6, p7, p8) {
-        let online;
-        if (p1 !== undefined) {
-          online = 'Онлайн';
-        } else {
-          online = 'онлайн';
-          p1 = '';
-        }
-
-        if (p8 != online) {
-          _counterOther++;
-        }
-        return p1 + online;
+          let online;
+          if (p1 !== undefined) {
+              online = 'Онлайн';
+          }
+          else {
+              online = 'онлайн';
+              p1 = '';
+          }
+          if (p8 != online) {
+              _counterOther++;
+          }
+          return p1 + online;
       });
-
       // мск
       stringToParse = stringToParse.replace(/(мск|msk)/gmi, function (match, p1) {
-        if (match != 'мск') {
-          _counterOther++;
-        }
-        return 'мск';
+          if (match != 'мск') {
+              _counterOther++;
+          }
+          return 'мск';
       });
     }
 
